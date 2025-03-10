@@ -19,6 +19,8 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_DB=${POSTGRES_DB?Variable not set}
+    networks:
+      - app_network
 
   adminer:
     image: adminer
@@ -29,6 +31,8 @@ services:
       - db
     environment:
       - ADMINER_DESIGN=pepa-linha-dark
+    networks:
+      - app_network
 
   app:
     container_name: maga_wish_app
@@ -40,11 +44,14 @@ services:
       - "8000:8000"
     volumes:
         - ./maga_wish:/app/maga_wish
-    environment:
-      - PYTHONUNBUFFERED=1
-      - PROJECT_NAME=maga_wish
-      - POSTGRES_SERVER=db
-      - POSTGRES_USER=root
+    env_file:
+      - .env
+    networks:
+      - app_network
 
 volumes:
   db:
+
+networks:
+  app_network:
+    driver: bridge
