@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = 'cdd0157fdf21'
-down_revision: Union[str, None] = 'c0858e1d8d64'
+down_revision: Union[str, None] = 'd2ce70739f1e'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -24,7 +24,7 @@ def upgrade() -> None:
         'wishlists',
         sa.Column('id', sa.UUID(), primary_key=True, default=sa.text('gen_random_uuid()')),
         sa.Column('user_id', sa.UUID(), sa.ForeignKey('users.id', ondelete='CASCADE'), nullable=False),
-        sa.Column('product_id', sa.UUID(), sa.ForeignKey('products.id', ondelete='CASCADE'), nullable=False),
+        sa.Column('product_id', sa.UUID(), nullable=False),
         sa.Column('added_at', sa.DateTime(), nullable=False, default=sa.func.now()),
     )
 

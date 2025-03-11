@@ -24,8 +24,7 @@ def upgrade() -> None:
         'users',
         sa.Column('id', sa.UUID(), primary_key=True, default=sa.text('gen_random_uuid()')),
         sa.Column('email', sa.String(255), nullable=False, unique=True),
-        sa.Column('is_superuser', sa.Boolean(), default=False, nullable=False),
-        sa.Column('full_name', sa.String(255)),
+        sa.Column('name', sa.String(255), nullable=False),
         sa.Column('hashed_password', sa.String(255), nullable=False),
     )
 
