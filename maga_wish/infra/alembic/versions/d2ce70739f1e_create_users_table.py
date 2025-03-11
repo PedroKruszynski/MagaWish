@@ -26,8 +26,10 @@ def upgrade() -> None:
         sa.Column('email', sa.String(255), nullable=False, unique=True),
         sa.Column('name', sa.String(255), nullable=False),
         sa.Column('hashed_password', sa.String(255), nullable=False),
+        sa.Column('created_at', sa.DateTime(), server_default=sa.func.now(), nullable=False),
+        sa.Column('updated_at', sa.DateTime(), nullable=True),
+        sa.Column('deleted_at', sa.DateTime(), nullable=True),
     )
-
 
 def downgrade() -> None:
     """Downgrade schema."""

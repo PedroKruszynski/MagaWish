@@ -26,18 +26,8 @@ async def get_user_by_id(
     """
     Create new user
     """
-    print(session)
-    print(user)
-
     response = await create_user_service.create(session, user)
 
-    # t = User
-    # t.name = 't'
-    # t.email = 'p@gmail.com'
-    # t.id = '618b3eee-aafa-46a6-ba18-998da1615571'
-    # t.created_at = datetime.now()
-
-    print(response)
     return response
     # user = session.get(User, user_id)
     # if user == current_user:

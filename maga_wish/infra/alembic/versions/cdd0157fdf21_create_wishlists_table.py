@@ -25,7 +25,8 @@ def upgrade() -> None:
         sa.Column('id', sa.UUID(), primary_key=True, default=sa.text('gen_random_uuid()')),
         sa.Column('user_id', sa.UUID(), sa.ForeignKey('users.id', ondelete='CASCADE'), nullable=False),
         sa.Column('product_id', sa.UUID(), nullable=False),
-        sa.Column('added_at', sa.DateTime(), nullable=False, default=sa.func.now()),
+        sa.Column('created_at', sa.DateTime(), server_default=sa.func.now(), nullable=False),
+        sa.Column('deleted_at', sa.DateTime(), nullable=True),
     )
 
     op.create_unique_constraint('uq_user_product', 'wishlists', ['user_id', 'product_id'])

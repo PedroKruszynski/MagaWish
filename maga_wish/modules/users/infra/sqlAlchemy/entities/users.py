@@ -19,7 +19,7 @@ class UserBase(SQLModel):
 class User(UserBase, table=True):
     __tablename__ = "users"
     
-    wishlists: List[Wishlist] = Relationship(back_populates="user", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
+    wishlists: List["Wishlist"] = Relationship(back_populates="user", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
 
     class Config:
         from_attributes = True

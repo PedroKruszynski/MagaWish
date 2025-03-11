@@ -8,5 +8,4 @@ class CreateUserService:
         self.repository = repository
 
     async def create(self, session: SessionDep, user: CreateUserDTO) -> User:
-        print(user)
-        return await self.repository.create(session, user)
+        return self.repository.create(session=session, user_data=user)
