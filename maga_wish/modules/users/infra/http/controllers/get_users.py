@@ -8,6 +8,7 @@ from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserReposit
 from maga_wish.modules.users.services import GetUsersService
 from maga_wish.modules.users.dtos import GetUsersDTO
 
+
 router = APIRouter()
 
 def getUsersService(

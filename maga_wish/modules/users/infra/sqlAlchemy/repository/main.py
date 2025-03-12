@@ -6,7 +6,8 @@ from maga_wish.modules.users.dtos import (
     GetUserByEmailDTO,
     CreateUserDTO,
     GetUsersDTO,
-    GetUserByIdDTO
+    GetUserByIdDTO,
+    DeleteUserDTO
 )
 from maga_wish.modules.authentication.service.get_password_hash import get_password_hash
 
@@ -35,3 +36,12 @@ class UserRepository:
         users = session.exec(query).all()
 
         return users if users else []
+    
+    def deleteUser(self, *, session: Session, data: DeleteUserDTO) -> bool: 
+        user = self.getUserById(session=session, user_data=GetUserByIdDTO(id=data.id))
+
+        if user:
+            session.delete(user)
+            session.commit()
+            return True
+        return False

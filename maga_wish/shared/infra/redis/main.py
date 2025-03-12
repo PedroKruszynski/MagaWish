@@ -20,12 +20,16 @@ class RedisDefault:
         await self.redisClient.close()
 
     async def set(self, key: str, obj: Any):
-        jsonDump = json.dumps(obj)
-        await self.redisClient.set(key, jsonDump)
+        await self.redisClient.set(key, obj)
 
     async def get(self, key: str) -> Any:
         jsonObj = await self.redisClient.get(key)
         if jsonObj:
-            return json.loads(jsonObj)
+            decodedJson = jsonObj.decode('utf-8')
+            return json.loads(decodedJson)
 
         return None
+    
+    async def remove(self, key: str) -> bool:
+        result = await self.redisClient.delete(key)
+        return result == 1

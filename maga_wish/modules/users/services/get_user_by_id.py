@@ -1,5 +1,4 @@
 from asyncio import gather
-# from redis.asyncio.client import Redis
 
 from maga_wish.shared.infra.redis.main import RedisDefault
 from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
@@ -15,7 +14,7 @@ class GetUserByIdService:
     async def getUserById(self, session: SessionDep, user: GetUserByIdDTO) -> User | None:
         userExistInRedis = await self.redisClient.get(f"user:{user.id}")
         if userExistInRedis:
-            return userExistInRedis
+            return User(**userExistInRedis)
 
         userExist = self.repository.getUserById(session=session, user_data=user)
         if userExist:

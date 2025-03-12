@@ -1,13 +1,13 @@
 from asyncio import gather
-from redis.asyncio.client import Redis
 
+from maga_wish.shared.infra.redis.main import RedisDefault
 from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
 from maga_wish.modules.users.dtos.create_user_dto import CreateUserDTO
 from maga_wish.modules.users.infra.sqlAlchemy.entities.users import User
 from maga_wish.shared.infra.http.utils import SessionDep
 
 class CreateUserService:
-    def __init__(self, repository: UserRepository, redis_client: Redis):
+    def __init__(self, repository: UserRepository, redis_client: RedisDefault):
         self.repository = repository
         self.redis_client = redis_client
 
