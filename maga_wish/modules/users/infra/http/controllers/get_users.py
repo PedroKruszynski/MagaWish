@@ -1,25 +1,40 @@
-import uuid
-from typing import Any
+from typing import Any, List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, Query
+
+from maga_wish.modules.users.dtos.user import User
+from maga_wish.shared.infra.http.utils import SessionDep
+from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
+from maga_wish.modules.users.services import GetUsersService
+from maga_wish.modules.users.dtos import GetUsersDTO
 
 router = APIRouter()
 
+def getUsersService(
+    userRepository: UserRepository = Depends(UserRepository),
+) -> GetUsersService:
+    return GetUsersService(userRepository)
 
-@router.get("/")
-# @router.get("/{user_id}", response_model=UserPublic)
-def get_users(
-    # session: SessionDep, skip: int = 0, limit: int = 100
+def getUsersDto(
+    limit: int = Query(10, gt=0), 
+    page: int = Query(1, gt=0)
+) -> GetUsersDTO:
+    return GetUsersDTO(limit=limit, page=page)
+
+@router.get("/", response_model=List[User])
+async def get_users(
+    *,
+    session: SessionDep,
+    data: GetUsersDTO = Depends(getUsersDto),
+    getUsers: GetUsersService = Depends(getUsersService),
 ) -> Any:
     """
-    Get a specific user by id.
+    Get all users
     """
-    # user = session.get(User, user_id)
-    # if user == current_user:
-    #     return user
-    # if not current_user.is_superuser:
-    #     raise HTTPException(
-    #         status_code=403,
-    #         detail="The user doesn't have enough privileges",
-    #     )
-    # return user
+    print('sdsdasdas')
+
+    users = await getUsers.getUsers(session, data)
+
+    print(users)
+
+    return users

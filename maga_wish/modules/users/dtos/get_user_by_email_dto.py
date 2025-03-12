@@ -1,4 +1,4 @@
 from pydantic import BaseModel, EmailStr
 
-class GetUserByEmail(BaseModel):
+class GetUserByEmailDTO(BaseModel):
     email: EmailStr
