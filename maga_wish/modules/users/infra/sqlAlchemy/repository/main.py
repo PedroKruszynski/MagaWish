@@ -5,7 +5,8 @@ from maga_wish.modules.users.infra.sqlAlchemy.entities.users import User
 from maga_wish.modules.users.dtos import (
     GetUserByEmailDTO,
     CreateUserDTO,
-    GetUsersDTO
+    GetUsersDTO,
+    GetUserByIdDTO
 )
 from maga_wish.modules.authentication.service.get_password_hash import get_password_hash
 
@@ -21,6 +22,11 @@ class UserRepository:
     
     def getUserByEmail(self, *, session: Session, user_data: GetUserByEmailDTO) -> User | None: 
         query = select(User).where(User.email == user_data.email)
+        user = session.exec(query).first()
+        return user
+
+    def getUserById(self, *, session: Session, user_data: GetUserByIdDTO) -> User | None: 
+        query = select(User).where(User.id == user_data.id)
         user = session.exec(query).first()
         return user
     

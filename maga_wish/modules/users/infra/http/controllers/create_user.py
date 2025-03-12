@@ -1,6 +1,5 @@
 from typing import Any
-from fastapi import APIRouter, Depends, Request
-from fastapi import HTTPException
+from fastapi import APIRouter, Depends, Request, HTTPException
 
 from maga_wish.modules.users.dtos.create_user_dto import CreateUserDTO
 from maga_wish.modules.users.dtos.user import User
@@ -32,16 +31,16 @@ async def get_user_by_id(
     session: SessionDep,
     user: CreateUserDTO,
     createUserService: CreateUserService = Depends(getCreateUserService),
-    getUserByEmail: GetUserByEmailService = Depends(getUserByEmailService)
+    getUserByEmailService: GetUserByEmailService = Depends(getUserByEmailService)
 ) -> Any:
     """
     Create new user
     """
-    userExist = await getUserByEmail.getUser(session, user)
+    userExist = await getUserByEmailService.getUser(session, user)
 
     if userExist:
         raise HTTPException(
-            status_code=404,
+            status_code=409,
             detail="E-mail unavailable",
         )
 

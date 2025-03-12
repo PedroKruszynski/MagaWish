@@ -26,15 +26,10 @@ async def get_users(
     *,
     session: SessionDep,
     data: GetUsersDTO = Depends(getUsersDto),
-    getUsers: GetUsersService = Depends(getUsersService),
+    getUsersService: GetUsersService = Depends(getUsersService),
 ) -> Any:
     """
     Get all users
     """
-    print('sdsdasdas')
-
-    users = await getUsers.getUsers(session, data)
-
-    print(users)
-
+    users = await getUsersService.getUsers(session, data)
     return users

@@ -1,40 +1,39 @@
-import uuid
 from typing import Any
+from fastapi import APIRouter, Depends, Request, HTTPException
+from uuid import UUID
 
+from maga_wish.modules.users.dtos import GetUserByIdDTO
 from maga_wish.modules.users.dtos.user import User
-from maga_wish.shared.infra.http.utils import (
-    SessionDep,
-    CurrentUser
-)
-# from fastapi import HTTPException
-from fastapi import APIRouter
+from maga_wish.modules.users.services import GetUserByIdService
+from maga_wish.shared.infra.http.utils import SessionDep
+from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
+
 
 router = APIRouter()
 
+def getUserByIdService(
+    userRepository: UserRepository = Depends(UserRepository),
+    request: Request = None
+) -> GetUserByIdService:
+    redis_client = request.app.state.redis
+    return GetUserByIdService(userRepository, redis_client)
+
 @router.get("/{user_id}", response_model=User)
-def get_user_by_id(
-    user_id: uuid.UUID, session: SessionDep, current_user: CurrentUser
+async def get_user_by_id(
+    session: SessionDep,
+    user_id: UUID,
+    getUsersService: GetUserByIdService = Depends(getUserByIdService),
 ) -> Any:
     """
-    Get a specific user by id.
+    Get a specific user by id
     """
-    print(user_id)
-    print(session)
-    print(current_user)
+    data = GetUserByIdDTO(id=user_id)
+    user = await getUsersService.getUserById(session, data)
 
-    t = User
-    t.name = 't'
-    t.email = 'dasdas'
-    t.id = '618b3eee-aafa-46a6-ba18-998da1615571'
-
-    return t
-    # print(current_user)
-    # user = session.get(User, user_id)
-    # if user == current_user:
-    #     return user
-    # if not current_user.is_superuser:
-    #     raise HTTPException(
-    #         status_code=403,
-    #         detail="The user doesn't have enough privileges",
-    #     )
-    # return user
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found",
+        )
+    
+    return user
