@@ -13,9 +13,11 @@ from maga_wish.modules.users.services import (
     GetUserByIdService,
     GetUserByEmailService
 )
-from maga_wish.shared.infra.http.utils import SessionDep
 from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
-
+from maga_wish.shared.infra.http.utils import (
+    CurrentUserDep,
+    SessionDep
+)
 
 router = APIRouter()
 
@@ -44,6 +46,7 @@ def getUserByIdService(
 async def update_user(
     *,
     session: SessionDep,
+    _: CurrentUserDep,
     userData: UpdateUserDTO,
     user_id: UUID,
     updateUserService: UpdateUserService = Depends(updateUserService),

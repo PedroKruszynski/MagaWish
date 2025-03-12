@@ -6,7 +6,10 @@ from maga_wish.modules.users.dtos import (
     DeleteUserDTO,
     GetUserByIdDTO
 )
-from maga_wish.shared.infra.http.utils import SessionDep
+from maga_wish.shared.infra.http.utils import (
+    CurrentUserDep,
+    SessionDep
+)
 from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
 from maga_wish.modules.users.services import (
     GetUserByIdService,
@@ -34,6 +37,7 @@ def deleteUserService(
 @router.delete("/{user_id}", response_model=MessageToReturn)
 async def delete_user(
     session: SessionDep,
+    _: CurrentUserDep,
     user_id: UUID,
     getUserService: GetUserByIdService = Depends(getUserByIdService),
     deleteUserService: DeleteUserService = Depends(deleteUserService),
@@ -41,7 +45,6 @@ async def delete_user(
     """
     Delete a user
     """
-
     data = GetUserByIdDTO(id=user_id)
     user = await getUserService.getUserById(session, data)
     
