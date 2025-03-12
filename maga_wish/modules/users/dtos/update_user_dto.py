@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, field_validator, model_validator
 from typing import Optional
 from uuid import UUID
 
@@ -12,6 +12,8 @@ class UpdateUserDTO(BaseModel):
     def ignore_id(cls, v):
         return None
 
-    class Config:
-        fields = {'id': {'exclude': True}}
+    @model_validator(mode="before")
+    def exclude_id(cls, values):
+        values.pop('id', None)
+        return values
 
