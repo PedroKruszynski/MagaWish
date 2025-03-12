@@ -29,7 +29,6 @@ def getUserByEmailService(
 @router.post("/", response_model=User)
 async def get_user_by_id(
     *,
-    request: Request,
     session: SessionDep,
     user: CreateUserDTO,
     create_user_service: CreateUserService = Depends(getCreateUserService),
@@ -49,12 +48,3 @@ async def get_user_by_id(
     response = await create_user_service.create(session, user)
 
     return response
-    # user = session.get(User, user_id)
-    # if user == current_user:
-    #     return user
-    # if not current_user.is_superuser:
-    #     raise HTTPException(
-    #         status_code=403,
-    #         detail="The user doesn't have enough privileges",
-    #     )
-    # return user
