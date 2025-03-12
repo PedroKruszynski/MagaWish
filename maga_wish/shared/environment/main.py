@@ -4,6 +4,7 @@ from typing import Literal
 from pydantic import (
     PostgresDsn,
     computed_field,
+    RedisDsn
 )
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -29,6 +30,10 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = ""
     POSTGRES_DB: str = ""
 
+    REDIS_SERVER: str
+    REDIS_PORT: int = 6379
+    REDIS_PATH: str = ""
+
     @computed_field
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
@@ -40,5 +45,19 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
+    
+    @computed_field
+    @property
+    def REDIS_DATABASE_URI(self) -> RedisDsn:
+        return RedisDsn.build(
+            scheme="redis",
+            host=self.REDIS_SERVER,
+            port=self.REDIS_PORT,
+            path=self.REDIS_PATH,
+        )
+    
+    @property
+    def REDIS_DATABASE_URI_STR(self) -> str:
+        return str(self.REDIS_DATABASE_URI)
 
 settings = Settings()  # type: ignore

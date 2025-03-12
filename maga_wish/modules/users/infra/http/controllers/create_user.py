@@ -1,5 +1,5 @@
 from typing import Any
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from fastapi import HTTPException
 
 from maga_wish.modules.users.dtos.create_user_dto import CreateUserDTO
@@ -12,23 +12,28 @@ from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserReposit
 
 router = APIRouter()
 
-def get_create_user_service(
-    user_repository: UserRepository = Depends(UserRepository)
+def getCreateUserService(
+    user_repository: UserRepository = Depends(UserRepository),
+    request: Request = None
 ) -> CreateUserService:
-    return CreateUserService(user_repository)
+    redis_client = request.app.state.redis
+    return CreateUserService(user_repository, redis_client)
 
-def get_user_by_email_service(
-    user_repository: UserRepository = Depends(UserRepository)
+def getUserByEmailService(
+    user_repository: UserRepository = Depends(UserRepository),
+    request: Request = None
 ) -> GetUserByEmailService:
-    return GetUserByEmailService(user_repository)
+    redis_client = request.app.state.redis
+    return GetUserByEmailService(user_repository, redis_client)
 
 @router.post("/", response_model=User)
 async def get_user_by_id(
     *,
+    request: Request,
     session: SessionDep,
     user: CreateUserDTO,
-    create_user_service: CreateUserService = Depends(get_create_user_service),
-    get_user_by_email: GetUserByEmailService = Depends(get_user_by_email_service)
+    create_user_service: CreateUserService = Depends(getCreateUserService),
+    get_user_by_email: GetUserByEmailService = Depends(getUserByEmailService)
 ) -> Any:
     """
     Create new user

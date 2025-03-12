@@ -34,6 +34,15 @@ services:
     networks:
       - app_network
 
+  redis:
+    container_name: redis
+    image: redis:7.4
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+
   app:
     container_name: maga_wish_app
     restart: always
