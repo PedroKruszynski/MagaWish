@@ -1,5 +1,4 @@
 from typing import Any, List
-
 from fastapi import APIRouter, Depends, Query
 
 from maga_wish.modules.users.dtos.user import User

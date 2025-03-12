@@ -10,7 +10,7 @@ from maga_wish.modules.users.dtos import (
     DeleteUserDTO,
     UpdateUserDTO
 )
-from maga_wish.modules.authentication.service.get_password_hash import get_password_hash
+from maga_wish.modules.authentication.utils.get_password_hash import get_password_hash
 
 class UserRepository:
     def create(self, *, session: Session, userData: CreateUserDTO) -> User:
