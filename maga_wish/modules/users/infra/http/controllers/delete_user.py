@@ -6,7 +6,6 @@ from maga_wish.modules.users.dtos import (
     DeleteUserDTO,
     GetUserByIdDTO
 )
-from maga_wish.modules.users.dtos.user import User
 from maga_wish.shared.infra.http.utils import SessionDep
 from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
 from maga_wish.modules.users.services import (

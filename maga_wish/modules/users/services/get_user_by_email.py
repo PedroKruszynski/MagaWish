@@ -16,7 +16,7 @@ class GetUserByEmailService:
         if userExistInRedis:
             return User(**userExistInRedis)
 
-        userExist = self.repository.getUserByEmail(session=session, user_data=user)
+        userExist = self.repository.getUserByEmail(session=session, userData=user)
         if userExist:
             jsonData = userExist.model_dump_json()
             await gather(

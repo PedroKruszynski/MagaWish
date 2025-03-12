@@ -7,27 +7,28 @@ from maga_wish.modules.users.dtos import (
     CreateUserDTO,
     GetUsersDTO,
     GetUserByIdDTO,
-    DeleteUserDTO
+    DeleteUserDTO,
+    UpdateUserDTO
 )
 from maga_wish.modules.authentication.service.get_password_hash import get_password_hash
 
 class UserRepository:
-    def create(self, *, session: Session, user_data: CreateUserDTO) -> User:
+    def create(self, *, session: Session, userData: CreateUserDTO) -> User:
         user = User.model_validate(
-            user_data, update={"hashed_password": get_password_hash(user_data.password)}
+            userData, update={"hashed_password": get_password_hash(userData.password)}
         )
         session.add(user)
         session.commit()
         session.refresh(user)
         return user
     
-    def getUserByEmail(self, *, session: Session, user_data: GetUserByEmailDTO) -> User | None: 
-        query = select(User).where(User.email == user_data.email)
+    def getUserByEmail(self, *, session: Session, userData: GetUserByEmailDTO) -> User | None: 
+        query = select(User).where(User.email == userData.email)
         user = session.exec(query).first()
         return user
 
-    def getUserById(self, *, session: Session, user_data: GetUserByIdDTO) -> User | None: 
-        query = select(User).where(User.id == user_data.id)
+    def getUserById(self, *, session: Session, userData: GetUserByIdDTO) -> User | None: 
+        query = select(User).where(User.id == userData.id)
         user = session.exec(query).first()
         return user
     
@@ -38,10 +39,35 @@ class UserRepository:
         return users if users else []
     
     def deleteUser(self, *, session: Session, data: DeleteUserDTO) -> bool: 
-        user = self.getUserById(session=session, user_data=GetUserByIdDTO(id=data.id))
+        user = self.getUserById(session=session, userData=GetUserByIdDTO(id=data.id))
 
         if user:
             session.delete(user)
             session.commit()
             return True
         return False
+    
+    def update(self, *, session: Session, userData: UpdateUserDTO) -> User | None:
+        user = self.getUserById(session=session, userData=GetUserByIdDTO(id=userData.id))
+
+        if not user:
+            return None
+
+        userUpdate = userData.model_dump(exclude_unset=True)
+
+        extra_data = {}
+        if "password" in userUpdate:
+            password = userUpdate["password"]
+            hashed_password = get_password_hash(password)
+            extra_data["hashed_password"] = hashed_password
+
+        for field, value in userUpdate.items():
+            setattr(user, field, value)
+
+        for field, value in extra_data.items():
+            setattr(user, field, value)
+
+        session.commit()
+        session.refresh(user)
+
+        return user

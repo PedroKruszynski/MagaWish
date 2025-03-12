@@ -4,5 +4,5 @@ from typing import Optional
 
 class DeleteUserDTO(BaseModel):
     id: UUID
-    email: Optional[EmailStr]
+    email: Optional[EmailStr] = None
 
