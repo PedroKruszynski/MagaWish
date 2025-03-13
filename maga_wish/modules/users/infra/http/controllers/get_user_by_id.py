@@ -26,13 +26,13 @@ async def get_user_by_id(
     session: SessionDep,
     _: CurrentUserDep,
     user_id: UUID,
-    getUsersService: GetUserByIdService = Depends(getUserByIdService),
+    getUserService: GetUserByIdService = Depends(getUserByIdService),
 ) -> Any:
     """
     Get a specific user by id
     """
     data = GetUserByIdDTO(id=user_id)
-    user = await getUsersService.getUserById(session, data)
+    user = await getUserService.getUserById(session, data)
 
     if not user:
         raise HTTPException(

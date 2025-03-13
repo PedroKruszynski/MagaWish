@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pydantic import EmailStr
 from sqlmodel import Field, SQLModel, Relationship
 
-from maga_wish.modules.whislists.infra.alembic.entities.whislists import Wishlist
+from maga_wish.modules.wishlists.infra.sqlAlchemy.entities.wishlists import Wishlist
 
 class UserBase(SQLModel):
     id: UUID = Field(default_factory=uuid.uuid4, primary_key=True)

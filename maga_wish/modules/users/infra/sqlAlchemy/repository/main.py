@@ -1,5 +1,6 @@
 from sqlmodel import Session, select
 from typing import List, Optional
+from datetime import datetime, timezone
 
 from maga_wish.modules.users.infra.sqlAlchemy.entities.users import User
 from maga_wish.modules.users.dtos import (
@@ -41,6 +42,8 @@ class UserRepository:
     def deleteUser(self, *, session: Session, data: DeleteUserDTO) -> bool: 
         user = self.getUserById(session=session, userData=GetUserByIdDTO(id=data.id))
 
+        user.deleted_at = datetime.now(timezone.utc)
+
         if user:
             session.delete(user)
             session.commit()
@@ -60,6 +63,8 @@ class UserRepository:
             password = userUpdate["password"]
             hashed_password = get_password_hash(password)
             extra_data["hashed_password"] = hashed_password
+
+        extra_data["updated_at"] = datetime.now(timezone.utc)
 
         for field, value in userUpdate.items():
             setattr(user, field, value)
