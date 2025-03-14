@@ -1,20 +1,23 @@
 from typing import Any
-from fastapi import APIRouter, Depends, HTTPException
 from uuid import UUID
 
-from maga_wish.modules.wishlists.dtos import DeleteProductOfWishlistDTO
-from maga_wish.modules.wishlists.services import DeleteProductOfWishlistService
-from maga_wish.shared.infra.http.utils import SessionDep
-from maga_wish.modules.wishlists.infra.sqlAlchemy.repository.main import WishlistRepository
-from maga_wish.shared.infra.http.utils import MessageToReturn
+from fastapi import APIRouter, Depends, HTTPException
 
+from maga_wish.modules.wishlists.dtos import DeleteProductOfWishlistDTO
+from maga_wish.modules.wishlists.infra.sqlAlchemy.repository.main import (
+    WishlistRepository,
+)
+from maga_wish.modules.wishlists.services import DeleteProductOfWishlistService
+from maga_wish.shared.infra.http.utils import MessageToReturn, SessionDep
 
 router = APIRouter()
 
+
 def deleteProductOfWishlistService(
-    wishlistRepository: WishlistRepository = Depends(WishlistRepository)
+    wishlistRepository: WishlistRepository = Depends(WishlistRepository),
 ) -> DeleteProductOfWishlistService:
     return DeleteProductOfWishlistService(wishlistRepository)
+
 
 @router.delete("/{user_id}/{product_id}", response_model=MessageToReturn)
 async def add_product_to_wishlist(
@@ -22,7 +25,9 @@ async def add_product_to_wishlist(
     session: SessionDep,
     user_id: UUID,
     product_id: UUID,
-    deleteProductOfWishlistService: DeleteProductOfWishlistService = Depends(deleteProductOfWishlistService)
+    deleteProductOfWishlistService: DeleteProductOfWishlistService = Depends(
+        deleteProductOfWishlistService
+    ),
 ) -> Any:
     """
     Delete product of a wishlist
@@ -35,8 +40,7 @@ async def add_product_to_wishlist(
             status_code=404,
             detail="Product not exist in the wishlist",
         )
-    
+
     return MessageToReturn(
-        success=productDeleted,
-        message="Product deleted from the wishlist"
+        success=productDeleted, message="Product deleted from the wishlist"
     )

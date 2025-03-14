@@ -1,11 +1,7 @@
 import secrets
 from typing import Literal
 
-from pydantic import (
-    PostgresDsn,
-    computed_field,
-    RedisDsn
-)
+from pydantic import PostgresDsn, RedisDsn, computed_field
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -47,7 +43,7 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
-    
+
     @computed_field
     @property
     def REDIS_DATABASE_URI(self) -> RedisDsn:
@@ -57,9 +53,10 @@ class Settings(BaseSettings):
             port=self.REDIS_PORT,
             path=self.REDIS_PATH,
         )
-    
+
     @property
     def REDIS_DATABASE_URI_STR(self) -> str:
         return str(self.REDIS_DATABASE_URI)
+
 
 settings = Settings()  # type: ignore

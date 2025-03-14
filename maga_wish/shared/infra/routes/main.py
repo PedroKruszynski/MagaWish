@@ -1,7 +1,9 @@
 from fastapi import APIRouter
 
+from maga_wish.modules.authentication.infra.http.routes.main import (
+    router as authentication_router,
+)
 from maga_wish.modules.users.infra.http.routes.main import router as users_router
-from maga_wish.modules.authentication.infra.http.routes.main import router as authentication_router
 from maga_wish.modules.wishlists.infra.http.routes.main import router as wishlist_router
 
 api_router = APIRouter()

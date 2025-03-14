@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 
 from maga_wish.modules.wishlists.infra.http.controllers import (
-    get_wishlist_by_user_id,
     add_product_to_wishlist,
-    delete_product_of_wishlist
+    delete_product_of_wishlist,
+    get_wishlist_by_user_id,
 )
 
 router = APIRouter(prefix="/wishlist", tags=["wishlist"])

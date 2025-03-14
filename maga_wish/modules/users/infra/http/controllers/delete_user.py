@@ -1,38 +1,33 @@
 from typing import Any
-from fastapi import APIRouter, Depends, Request, HTTPException
 from uuid import UUID
 
-from maga_wish.modules.users.dtos import (
-    DeleteUserDTO,
-    GetUserByIdDTO
-)
+from fastapi import APIRouter, Depends, HTTPException, Request
+
+from maga_wish.modules.users.dtos import DeleteUserDTO, GetUserByIdDTO
+from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
+from maga_wish.modules.users.services import DeleteUserService, GetUserByIdService
 from maga_wish.shared.infra.http.utils import (
     CurrentUserDep,
-    SessionDep
+    MessageToReturn,
+    SessionDep,
 )
-from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
-from maga_wish.modules.users.services import (
-    GetUserByIdService,
-    DeleteUserService
-)
-from maga_wish.shared.infra.http.utils import MessageToReturn
-
 
 router = APIRouter()
 
+
 def getUserByIdService(
-    userRepository: UserRepository = Depends(UserRepository),
-    request: Request = None
+    userRepository: UserRepository = Depends(UserRepository), request: Request = None
 ) -> GetUserByIdService:
     redis_client = request.app.state.redis
     return GetUserByIdService(userRepository, redis_client)
 
+
 def deleteUserService(
-    userRepository: UserRepository = Depends(UserRepository),
-    request: Request = None
+    userRepository: UserRepository = Depends(UserRepository), request: Request = None
 ) -> DeleteUserService:
     redis_client = request.app.state.redis
     return DeleteUserService(userRepository, redis_client)
+
 
 @router.delete("/{user_id}", response_model=MessageToReturn)
 async def delete_user(
@@ -47,7 +42,7 @@ async def delete_user(
     """
     data = GetUserByIdDTO(id=user_id)
     user = await getUserService.getUserById(session, data)
-    
+
     if not user:
         raise HTTPException(
             status_code=404,
@@ -62,8 +57,5 @@ async def delete_user(
             status_code=500,
             detail="Server Error",
         )
-    
-    return MessageToReturn(
-        success=userDeleted,
-        message="User Deleted"
-    )
+
+    return MessageToReturn(success=userDeleted, message="User Deleted")

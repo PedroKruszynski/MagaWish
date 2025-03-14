@@ -1,6 +1,7 @@
-from pydantic import BaseModel
-from pydantic import BaseModel
 from uuid import UUID
+
+from pydantic import BaseModel
+
 
 class DeleteProductOfWishlistDTO(BaseModel):
     product_id: UUID

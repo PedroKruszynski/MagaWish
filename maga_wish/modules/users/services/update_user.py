@@ -1,10 +1,11 @@
 from asyncio import gather
 
-from maga_wish.shared.infra.redis.main import RedisDefault
-from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
 from maga_wish.modules.users.dtos import UpdateUserDTO
 from maga_wish.modules.users.infra.sqlAlchemy.entities.users import User
+from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
 from maga_wish.shared.infra.http.utils import SessionDep
+from maga_wish.shared.infra.redis.main import RedisDefault
+
 
 class UpdateUserService:
     def __init__(self, repository: UserRepository, redis_client: RedisDefault):
@@ -18,7 +19,7 @@ class UpdateUserService:
             jsonData = userUpdated.model_dump_json()
             await gather(
                 self.redis_client.set(f"user:{userUpdated.id}", jsonData),
-                self.redis_client.set(f"user:{userUpdated.email}", jsonData)
+                self.redis_client.set(f"user:{userUpdated.email}", jsonData),
             )
 
         return userUpdated

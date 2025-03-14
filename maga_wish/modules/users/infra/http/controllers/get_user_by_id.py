@@ -1,25 +1,23 @@
 from typing import Any
-from fastapi import APIRouter, Depends, Request, HTTPException
 from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException, Request
 
 from maga_wish.modules.users.dtos import GetUserByIdDTO
 from maga_wish.modules.users.dtos.user import User
-from maga_wish.modules.users.services import GetUserByIdService
-from maga_wish.shared.infra.http.utils import (
-    CurrentUserDep,
-    SessionDep
-)
 from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
-
+from maga_wish.modules.users.services import GetUserByIdService
+from maga_wish.shared.infra.http.utils import CurrentUserDep, SessionDep
 
 router = APIRouter()
 
+
 def getUserByIdService(
-    userRepository: UserRepository = Depends(UserRepository),
-    request: Request = None
+    userRepository: UserRepository = Depends(UserRepository), request: Request = None
 ) -> GetUserByIdService:
     redis_client = request.app.state.redis
     return GetUserByIdService(userRepository, redis_client)
+
 
 @router.get("/{user_id}", response_model=User)
 async def get_user_by_id(
@@ -39,5 +37,5 @@ async def get_user_by_id(
             status_code=404,
             detail="User not found",
         )
-    
+
     return user
