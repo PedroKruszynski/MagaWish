@@ -34,6 +34,7 @@ app = FastAPI(
     lifespan=lifespan,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
     generate_unique_id_function=custom_generate_unique_id,
+    response_model_exclude_none=True,
 )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)

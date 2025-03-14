@@ -8,6 +8,7 @@ from maga_wish.modules.wishlists.dtos import (
     DeleteProductOfWishlistDTO,
     GetWishlistByUserIdDTO,
     GetWishlistProductByUserIdProductIdDTO,
+    RestoreProductOfWishlistDTO,
 )
 from maga_wish.modules.wishlists.infra.sqlAlchemy.entities.wishlists import Wishlist
 
@@ -59,8 +60,34 @@ class WishlistRepository:
         if not wishlistProduct:
             return None
 
+        if wishlistProduct.deleted_at:
+            return False
+
         if wishlistProduct:
             wishlistProduct.deleted_at = datetime.now(timezone.utc)
+
+            session.commit()
+            session.refresh(wishlistProduct)
+
+            return True
+
+        return False
+
+    def restoreProductOfWishlist(
+        self, *, session: Session, data: RestoreProductOfWishlistDTO
+    ) -> bool | None:
+        wishlistProduct = self.getWishlistProductByUserIdProductId(
+            session=session, data=data
+        )
+
+        if not wishlistProduct:
+            return None
+
+        if not wishlistProduct.deleted_at:
+            return False
+
+        if wishlistProduct:
+            wishlistProduct.deleted_at = None
 
             session.commit()
             session.refresh(wishlistProduct)

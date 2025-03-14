@@ -5,5 +5,5 @@ from sqlmodel import SQLModel
 
 class MessageToReturn(SQLModel):
     success: bool
-    data: Any | None
+    data: Any | None = None
     message: str

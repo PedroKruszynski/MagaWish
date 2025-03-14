@@ -20,7 +20,7 @@ def deleteProductOfWishlistService(
 
 
 @router.delete("/{user_id}/{product_id}", response_model=MessageToReturn)
-async def add_product_to_wishlist(
+async def delete_product_of_wishlist(
     *,
     session: SessionDep,
     user_id: UUID,
