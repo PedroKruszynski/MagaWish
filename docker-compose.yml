@@ -53,6 +53,8 @@ services:
       - "8000:8000"
     volumes:
         - ./maga_wish:/app/maga_wish
+        - ./tests:/app/tests
+        - ./coverage_data:/app/coverage_data
     env_file:
       - .env
     networks:

@@ -19,5 +19,6 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 ENV PYTHONPATH=/app
 
 COPY ./maga_wish /app/maga_wish
+COPY ./tests /app/tests
 
 CMD ["uvicorn", "maga_wish.shared.infra.http.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
