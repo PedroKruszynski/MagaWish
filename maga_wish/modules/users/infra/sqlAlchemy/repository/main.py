@@ -9,6 +9,7 @@ from maga_wish.modules.users.dtos import (
     GetUserByEmailDTO,
     GetUserByIdDTO,
     GetUsersDTO,
+    RestoreUserDTO,
     UpdateUserDTO,
 )
 from maga_wish.modules.users.infra.sqlAlchemy.entities.users import User
@@ -42,11 +43,16 @@ class UserRepository:
 
         return users if users else []
 
-    def deleteUser(self, *, session: Session, data: DeleteUserDTO) -> bool | None:
+    def deleteUser(
+        self, *, session: Session, data: DeleteUserDTO
+    ) -> User | None | bool:
         user = self.getUserById(session=session, userData=GetUserByIdDTO(id=data.id))
 
         if not user:
             return None
+
+        if user.deleted_at:
+            return False
 
         if user:
             user.deleted_at = datetime.now(timezone.utc)
@@ -54,7 +60,7 @@ class UserRepository:
             session.commit()
             session.refresh(user)
 
-            return True
+            return user
 
         return False
 
@@ -86,3 +92,25 @@ class UserRepository:
         session.refresh(user)
 
         return user
+
+    def restoreUser(
+        self, *, session: Session, data: RestoreUserDTO
+    ) -> User | None | bool:
+        user = self.getUserById(session=session, userData=GetUserByIdDTO(id=data.id))
+
+        if not user:
+            return None
+
+        if not user.deleted_at:
+            return False
+
+        if user:
+            user.updated_at = datetime.now(timezone.utc)
+            user.deleted_at = None
+
+            session.commit()
+            session.refresh(user)
+
+            return user
+
+        return False

@@ -49,13 +49,19 @@ async def delete_user(
             detail="User not found",
         )
 
-    data = DeleteUserDTO(id=user_id, email=user.email)
+    if user.deleted_at:
+        raise HTTPException(
+            status_code=404,
+            detail="User already deleted",
+        )
+
+    data = DeleteUserDTO(id=user_id)
     userDeleted = await deleteUserService.deleteUser(session, data)
 
     if not userDeleted:
         raise HTTPException(
             status_code=500,
-            detail="Server Error",
+            detail="User not deleted",
         )
 
-    return MessageToReturn(success=userDeleted, message="User Deleted")
+    return MessageToReturn(success=True, data=userDeleted, message="User Deleted")

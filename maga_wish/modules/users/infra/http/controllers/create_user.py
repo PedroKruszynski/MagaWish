@@ -2,7 +2,7 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from maga_wish.modules.users.dtos.create_user_dto import CreateUserDTO
+from maga_wish.modules.users.dtos import CreateUserDTO
 from maga_wish.modules.users.dtos.user import User
 from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
 from maga_wish.modules.users.services import CreateUserService, GetUserByEmailService

@@ -3,6 +3,7 @@ from .delete_user_dto import DeleteUserDTO
 from .get_user_by_email_dto import GetUserByEmailDTO
 from .get_user_by_id_dto import GetUserByIdDTO
 from .get_users_dto import GetUsersDTO
+from .restore_user_dto import RestoreUserDTO
 from .update_user_dto import UpdateUserDTO
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     "GetUserByIdDTO",
     "DeleteUserDTO",
     "UpdateUserDTO",
+    "RestoreUserDTO",
 ]

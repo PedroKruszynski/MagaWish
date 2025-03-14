@@ -3,6 +3,7 @@ from .delete_user import DeleteUserService
 from .get_user_by_email import GetUserByEmailService
 from .get_user_by_id import GetUserByIdService
 from .get_users import GetUsersService
+from .restore_user import RestoreUserService
 from .update_user import UpdateUserService
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     "GetUserByIdService",
     "DeleteUserService",
     "UpdateUserService",
+    "RestoreUserService",
 ]
