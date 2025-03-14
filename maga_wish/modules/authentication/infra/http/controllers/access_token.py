@@ -37,13 +37,13 @@ async def access_token(
     if not user:
         raise HTTPException(
             status_code=400,
-            detail="E-mail or passwor incorrect",
+            detail="E-mail or password incorrect",
         )
-    
+
     if not verify_password(formData.password, user.hashed_password):
         raise HTTPException(
             status_code=400,
-            detail="E-mail or passwor incorrect",
+            detail="E-mail or password incorrect",
         )
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)

@@ -1,7 +1,7 @@
 from uuid import UUID, uuid4
 from typing import List, Optional
 from datetime import datetime, timezone
-from pydantic import EmailStr
+from pydantic import EmailStr, ConfigDict
 from sqlmodel import Field, SQLModel, Relationship
 
 from maga_wish.modules.wishlists.infra.sqlAlchemy.entities.wishlists import Wishlist
@@ -20,5 +20,4 @@ class User(UserBase, table=True):
     
     wishlists: List["Wishlist"] = Relationship(back_populates="user", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
