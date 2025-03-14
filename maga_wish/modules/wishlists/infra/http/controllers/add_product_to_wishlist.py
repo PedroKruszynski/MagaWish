@@ -4,22 +4,34 @@ from uuid import UUID
 from typing import List
 
 from maga_wish.modules.wishlists.dtos.wishlist import Wishlist
-from maga_wish.modules.users.services import (
-    CreateUserService,
-    GetUserByIdService
+from maga_wish.modules.wishlists.dtos import (
+    AddProductToWishlistDTO,
+    GetWishlistByUserIdDTO
+)
+from maga_wish.modules.users.dtos import GetUserByIdDTO
+from maga_wish.modules.products.dtos import GetProductByIdDTO
+from maga_wish.modules.users.services import GetUserByIdService
+from maga_wish.modules.products.services import GetProductByIdService
+from maga_wish.modules.wishlists.services import (
+    AddProductToWishlistService,
+    GetWishlistByUserIdService
 )
 from maga_wish.shared.infra.http.utils import SessionDep
 from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
+from maga_wish.modules.wishlists.infra.sqlAlchemy.repository.main import WishlistRepository
 
 
 router = APIRouter()
 
-def addProductToWishlist(
-    userRepository: UserRepository = Depends(UserRepository),
-    request: Request = None
-) -> GetUserByIdService:
-    redis_client = request.app.state.redis
-    return GetUserByIdService(userRepository, redis_client)
+def addProductToWishlistService(
+    wishlistRepository: WishlistRepository = Depends(WishlistRepository)
+) -> AddProductToWishlistService:
+    return AddProductToWishlistService(wishlistRepository)
+
+def getWishlistByUserIdService(
+    wishlistRepository: WishlistRepository = Depends(WishlistRepository)
+) -> GetWishlistByUserIdService:
+    return GetWishlistByUserIdService(wishlistRepository)
 
 def getUserByIdService(
     userRepository: UserRepository = Depends(UserRepository),
@@ -28,26 +40,53 @@ def getUserByIdService(
     redis_client = request.app.state.redis
     return GetUserByIdService(userRepository, redis_client)
 
+def getProductByIdService() -> GetProductByIdService:
+    return GetProductByIdService()
+
 @router.post("/{user_id}/{product_id}", response_model=List[Wishlist])
-async def create_user(
+async def add_product_to_wishlist(
     *,
     session: SessionDep,
     user_id: UUID,
     product_id: UUID,
-    addProductToWishlist: CreateUserService = Depends(addProductToWishlist),
-    getUserByIdService: GetUserByIdService = Depends(getUserByIdService)
+    addProductToWishlistService: AddProductToWishlistService = Depends(addProductToWishlistService),
+    getUserByIdService: GetUserByIdService = Depends(getUserByIdService),
+    getProductByIdService: GetProductByIdService = Depends(getProductByIdService),
+    getWishlistByUserIdService: GetWishlistByUserIdService = Depends(getWishlistByUserIdService)
 ) -> Any:
     """
     Add product to a wishlist
     """
-    userExist = await getUserByIdService.getUserById(session, user_id)
+    dataFindUser = GetUserByIdDTO(id=user_id)
+    userExist = await getUserByIdService.getUserById(session, dataFindUser)
 
-    if userExist:
+    if not userExist:
         raise HTTPException(
             status_code=404,
-            detail="User not find",
+            detail="User not found",
+        )
+    
+    dataFindProduct = GetProductByIdDTO(id=product_id)
+    productExist = await getProductByIdService.getProductById(dataFindProduct)
+
+    if not productExist["error"]:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found",
         )
 
-    response = await createUserService.create(session, user)
+    dataToCreate = AddProductToWishlistDTO(user_id=user_id, product_id=product_id)
+    
+    try:
+        await addProductToWishlistService.create(session, dataToCreate)
 
-    return response
+        dataToFindWhislist = GetWishlistByUserIdDTO()
+        dataToFindWhislist.user_id = user_id
+        wishlistOfUser = await getWishlistByUserIdService.getWishlistByUserId(session=session, data=dataToFindWhislist)
+
+        return wishlistOfUser
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        )

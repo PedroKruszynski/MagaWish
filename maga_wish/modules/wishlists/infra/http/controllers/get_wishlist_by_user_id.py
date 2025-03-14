@@ -37,6 +37,6 @@ async def get_wishlist_by_user_id(
     Get a wishlist
     """
 
-    data.id = user_id
+    data.user_id = user_id
     wishlist = await getWishlistByUserIdService.getWishlistByUserId(session, data)
     return wishlist

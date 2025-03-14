@@ -9,5 +9,5 @@ class AddProductToWishlistService:
     def __init__(self, repository: WishlistRepository):
         self.repository = repository
 
-    async def addProductToWishlist(self, session: SessionDep, data: AddProductToWishlistDTO) -> Optional[List[Wishlist]]:
-        return self.repository.getWishlistByUserId(session=session, data=data)
+    async def create(self, session: SessionDep, data: AddProductToWishlistDTO) -> Wishlist:
+        return self.repository.create(session=session, data=data)

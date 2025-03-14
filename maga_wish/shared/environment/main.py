@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     REDIS_PORT: int = 6379
     REDIS_PATH: str = ""
 
+    PRODUCTS_API_URL: str = "http://challenge-api.luizalabs.com/api/product"
+
     @computed_field
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:

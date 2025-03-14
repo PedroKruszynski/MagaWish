@@ -39,15 +39,20 @@ class UserRepository:
 
         return users if users else []
     
-    def deleteUser(self, *, session: Session, data: DeleteUserDTO) -> bool: 
+    def deleteUser(self, *, session: Session, data: DeleteUserDTO) -> bool | None: 
         user = self.getUserById(session=session, userData=GetUserByIdDTO(id=data.id))
 
-        user.deleted_at = datetime.now(timezone.utc)
+        if not user:
+            return None
 
         if user:
-            session.delete(user)
+            setattr(user, "deleted_at", datetime.now(timezone.utc))
+
             session.commit()
+            session.refresh(user)
+
             return True
+
         return False
     
     def update(self, *, session: Session, userData: UpdateUserDTO) -> User | None:
