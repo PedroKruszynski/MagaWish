@@ -1,0 +1,4 @@
+from .get_user_by_email_service_mock import mock_get_user_by_email_service
+from .get_user_by_id_service_mock import mock_get_user_by_id_service
+
+__all__ = [mock_get_user_by_email_service, mock_get_user_by_id_service]
