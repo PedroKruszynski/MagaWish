@@ -14,9 +14,12 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
+      POSTGRES_SERVER: db
       POSTGRES_USER: test_user
       POSTGRES_PASSWORD: test_password
       POSTGRES_DB: test_db
+      PROJECT_NAME: MagaWish
+      REDIS_SERVER: redis
 
     steps:
       - name: Checkout repository
