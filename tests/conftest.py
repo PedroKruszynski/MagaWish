@@ -8,10 +8,11 @@ from maga_wish.modules.authentication.infra.http.routes.main import (
 from maga_wish.modules.users.infra.http.routes.main import router as users_router
 from maga_wish.modules.wishlists.infra.http.routes.main import router as wishlist_router
 from tests.shared.mocks.services import (  # noqa
+    mock_delete_user_service,
     mock_get_user_by_email_service,
     mock_get_user_by_id_service,
-    mock_delete_user_service,
-    mock_restore_user_service
+    mock_restore_user_service,
+    mock_update_user_service,
 )
 
 

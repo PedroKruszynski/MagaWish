@@ -17,5 +17,5 @@ user = User(
     email=dataToCreateUser.email,
     created_at=datetime.now(),
     hashed_password=get_password_hash(dataToCreateUser.password),
-    deleted_at=None
+    deleted_at=None,
 )

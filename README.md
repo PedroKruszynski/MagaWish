@@ -114,7 +114,7 @@ You have two ways to view all available endpoints:
 1. **Swagger UI** – Open `/docs` in your browser to explore the API interactively.
 2. **Postman Collection** – Navigate to `/docs/postman` to download the JSON file and import it into Postman.
 
-## Database EER 
+## Database EER
 
 EER - Enhanced Entity Relationship
 

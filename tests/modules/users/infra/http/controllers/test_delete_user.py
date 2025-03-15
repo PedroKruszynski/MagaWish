@@ -1,18 +1,19 @@
-from unittest.mock import AsyncMock
-from uuid import uuid4
 from datetime import datetime
+from unittest.mock import AsyncMock
 
 import pytest
 from fastapi import status
+
+from maga_wish.modules.users.infra.http.controllers.delete_user import (
+    deleteUserService,
+    getUserByIdService,
+)
 from tests.shared.mocks.token import bearerToken
 from tests.shared.mocks.user import user
-from maga_wish.modules.users.infra.http.controllers.delete_user import (
-    getUserByIdService,
-    deleteUserService
-)
+
 
 @pytest.mark.asyncio
-async def test_delete_user_not_authenticated(app, client):
+async def test_delete_user_not_authenticated(client):
     async with client:
         response = await client.delete(f"/users/{user.id}")
 
@@ -51,14 +52,14 @@ async def test_delete_user_already_deleted(app, client, mock_delete_user_service
 
 
 @pytest.mark.asyncio
-async def test_delete_user_success(app, client, mock_get_user_by_id_service, mock_delete_user_service):
+async def test_delete_user_success(app, client, mock_delete_user_service):
     mock_service = AsyncMock()
     user.deleted_at = None
     mock_service.getUserById = AsyncMock(return_value=user)
 
     app.dependency_overrides[getUserByIdService] = lambda: mock_service
     app.dependency_overrides[deleteUserService] = lambda: mock_delete_user_service
-    
+
     async with client:
         response = await client.delete(f"/users/{user.id}", headers=bearerToken)
 
