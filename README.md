@@ -113,6 +113,14 @@ You have two ways to view all available endpoints:
 1. **Swagger UI** – Open `/docs` in your browser to explore the API interactively.
 2. **Postman Collection** – Navigate to `/docs/postman` to download the JSON file and import it into Postman.
 
+## Database EER 
+
+EER - Enhanced Entity Relationship
+
+![Database Diagram](./docs/database/eer.png)
+
+You can view the database diagram script [here](./docs/database/dbdiagram.io.sql.sql) or open it online using this link: [dbdiagram.io](https://dbdiagram.io/d/MagaWish-67d4ca4375d75cc844282a27).
+
 ## Architecture
 
 ### Infra
