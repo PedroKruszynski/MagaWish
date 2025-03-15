@@ -49,8 +49,8 @@ cp .env.example .env
 After create the .env file you can run these following commands to build the image.
 
 ``` bash
-# Build all images for the app
-docker-compose build
+# Build all images for the app and run the containers
+docker compose up -d --build
 ```
 
 ### Run Migrations *Required*
