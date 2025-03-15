@@ -51,7 +51,7 @@ async def delete_user(
 
     if user.deleted_at:
         raise HTTPException(
-            status_code=404,
+            status_code=400,
             detail="User already deleted",
         )
 

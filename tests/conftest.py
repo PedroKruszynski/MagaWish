@@ -10,6 +10,7 @@ from maga_wish.modules.wishlists.infra.http.routes.main import router as wishlis
 from tests.shared.mocks.services import (  # noqa
     mock_get_user_by_email_service,
     mock_get_user_by_id_service,
+    mock_delete_user_service
 )
 
 
