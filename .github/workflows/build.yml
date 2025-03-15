@@ -1,0 +1,52 @@
+name: Build and Test App
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: test_db
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build the app container
+        run: docker build -t maga_wish_app -f app.Dockerfile .
+
+      - name: Run the app container
+        run: |
+          docker run -d --name maga_wish_app_container \
+            -e POSTGRES_USER=${{ env.POSTGRES_USER }} \
+            -e POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }} \
+            -e POSTGRES_DB=${{ env.POSTGRES_DB }} \
+            -p 8000:8000 maga_wish_app
+
+      - name: Wait for app to be ready
+        run: sleep 15  # Allow time for the app to start
+
+      - name: Run tests inside the container
+        run: docker exec maga_wish_app_container pytest --cov=app --cov-report=xml
+
+      - name: Stop the app container
+        run: docker stop maga_wish_app_container && docker rm maga_wish_app_container
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage_data/
