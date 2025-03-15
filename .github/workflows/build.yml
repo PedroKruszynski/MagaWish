@@ -36,7 +36,10 @@ jobs:
           docker run -d --name maga_wish_app_container \
             -e POSTGRES_USER=${{ env.POSTGRES_USER }} \
             -e POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }} \
+            -e POSTGRES_SERVER=${{ env.POSTGRES_SERVER }} \
             -e POSTGRES_DB=${{ env.POSTGRES_DB }} \
+            -e PROJECT_NAME=${{ env.PROJECT_NAME }} \
+            -e REDIS_SERVER=${{ env.REDIS_SERVER }} \
             -p 8000:8000 maga_wish_app
 
       - name: Wait for app to be ready
