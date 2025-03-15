@@ -12,6 +12,7 @@
   - [Running Tests](https://github.com/PedroKruszynski/MagaWish#running-tests)
   - [Gen Coverage](https://github.com/PedroKruszynski/MagaWish#gen-coverage)
 - [API Endpoints](https://github.com/PedroKruszynski/MagaWish#api-endpoints)
+- [Database EER](https://github.com/PedroKruszynski/MagaWish#database-err)
 - [Architecture](https://github.com/PedroKruszynski/MagaWish#Architecture)
   - [Infra Folder](https://github.com/PedroKruszynski/MagaWish#infra)
   - [Modules Folder](https://github.com/PedroKruszynski/MagaWish#modules)
@@ -120,6 +121,12 @@ EER - Enhanced Entity Relationship
 ![Database Diagram](./docs/database/eer.png)
 
 You can view the database diagram script [here](./docs/database/dbdiagram.io.sql.sql) or open it online using this link: [dbdiagram.io](https://dbdiagram.io/d/MagaWish-67d4ca4375d75cc844282a27).
+
+## Adminer
+
+Adminer is available for internal database management at http://localhost:8080. This tool allows you to manage and interact with the database directly.
+
+![Adminer](./docs/adminer/adminer.png)
 
 ## Architecture
 
