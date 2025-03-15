@@ -13,17 +13,14 @@ from maga_wish.modules.users.infra.http.controllers.delete_user import (
 
 @pytest.mark.asyncio
 async def test_delete_user_not_authenticated(app, client):
-    user_id = uuid4()
-
     async with client:
-        response = await client.delete(f"/users/{user_id}")
+        response = await client.delete(f"/users/{user.id}")
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
 @pytest.mark.asyncio
 async def test_delete_user_not_found(app, client, mock_delete_user_service):
-    user_id = uuid4()
     mock_service = AsyncMock()
     mock_service.getUserById = AsyncMock(return_value=None)
 
@@ -31,7 +28,7 @@ async def test_delete_user_not_found(app, client, mock_delete_user_service):
     app.dependency_overrides[deleteUserService] = lambda: mock_delete_user_service
 
     async with client:
-        response = await client.delete(f"/users/{user_id}", headers=bearerToken)
+        response = await client.delete(f"/users/{user.id}", headers=bearerToken)
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json()["detail"] == "User not found"

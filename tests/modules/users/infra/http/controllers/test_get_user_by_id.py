@@ -15,11 +15,10 @@ from tests.shared.mocks.user import user
 async def test_get_user_by_id_not_authenticated(
     app, client, mock_get_user_by_id_service
 ):
-    user_id = uuid4()
     app.dependency_overrides[getUserByIdService] = lambda: mock_get_user_by_id_service
 
     async with client:
-        response = await client.get(f"/users/{user_id}")
+        response = await client.get(f"/users/{user.id}")
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 

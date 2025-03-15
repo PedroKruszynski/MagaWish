@@ -6,7 +6,11 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from maga_wish.modules.users.dtos import GetUserByIdDTO, RestoreUserDTO
 from maga_wish.modules.users.infra.sqlAlchemy.repository.main import UserRepository
 from maga_wish.modules.users.services import GetUserByIdService, RestoreUserService
-from maga_wish.shared.infra.http.utils import MessageToReturn, SessionDep
+from maga_wish.shared.infra.http.utils import (
+    CurrentUserDep,
+    MessageToReturn,
+    SessionDep,
+)
 
 router = APIRouter()
 
@@ -29,6 +33,7 @@ def getUserByIdService(
 async def restore_user(
     *,
     session: SessionDep,
+    _: CurrentUserDep,
     user_id: UUID,
     restoreUserService: RestoreUserService = Depends(restoreUserService),
     getUserByIdService: GetUserByIdService = Depends(getUserByIdService),
