@@ -78,7 +78,7 @@ async def add_product_to_wishlist(
     dataFindProduct = GetProductByIdDTO(id=product_id)
     productExist = await getProductByIdService.getProductById(dataFindProduct)
 
-    if not productExist["error"]:
+    if "error" in productExist and productExist["error"]:
         raise HTTPException(
             status_code=404,
             detail="Product not found",
