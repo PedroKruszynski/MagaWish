@@ -46,7 +46,7 @@ jobs:
         run: sleep 15  # Allow time for the app to start
 
       - name: Run tests inside the container
-        run: docker exec maga_wish_app_container pytest --cov=app --cov-report=xml
+        run: docker exec maga_wish_app_container pytest
 
       - name: Stop the app container
         run: docker stop maga_wish_app_container && docker rm maga_wish_app_container
